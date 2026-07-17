@@ -74,6 +74,27 @@ window.addEventListener("resize", () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+// 🔹 Lighting (FIXED)
+
+// Ambient light (base visibility)
+const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambient);
+
+// Strong directional light
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+dirLight.position.set(5, 5, 5);
+scene.add(dirLight);
+
+// Fill light (opposite side to remove harsh shadows)
+const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
+fillLight.position.set(-5, -3, -5);
+scene.add(fillLight);
+
+// Optional: hemisphere light for softer global illumination
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
+scene.add(hemi);
+
+
 // Animate
 function animate() {
   requestAnimationFrame(animate);
