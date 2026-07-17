@@ -64,11 +64,12 @@ const loader = new GLTFLoader();
 
 
 loader.load(
-  "/models/884cylinders.glb",
+  "models/884cylinders.glb",
+
+  // ✅ SUCCESS
   (gltf) => {
     const model = gltf.scene;
 
-    // 🔥 APPLY MATERIAL FIX HERE
     const CHANNEL_COLORS = [
       0xff4d4d,
       0x4dff88,
@@ -79,23 +80,17 @@ loader.load(
 
     model.traverse((child) => {
       if (child.isMesh) {
-
         const color = CHANNEL_COLORS[meshIndex % CHANNEL_COLORS.length];
 
         child.material = new THREE.MeshStandardMaterial({
           color: color,
-
           transparent: true,
           opacity: 0.75,
-
           roughness: 0.35,
           metalness: 0.05,
-
           side: THREE.DoubleSide,
           depthWrite: true,
           depthTest: true,
-
-          // optional but nice
           emissive: new THREE.Color(color),
           emissiveIntensity: 0.05,
         });
@@ -104,12 +99,27 @@ loader.load(
       }
     });
 
-    // 🔹 Add model AFTER modifying materials
     scene.add(model);
 
-    // (keep your centering / camera code here if you have it)
+    // ✅ REMOVE loading text
+    loadingDiv.remove();
+
+    console.log("Model loaded successfully");
+  },
+
+  // 🔄 PROGRESS (optional)
+  (xhr) => {
+    console.log(`Loading: ${(xhr.loaded / xhr.total * 100).toFixed(1)}%`);
+  },
+
+  // ❌ ERROR (THIS IS VERY IMPORTANT)
+  (error) => {
+    console.error("GLB failed to load:", error);
+
+    loadingDiv.innerText = "Failed to load model";
   }
 );
+
 
 // Resize
 window.addEventListener("resize", () => {
