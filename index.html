@@ -1,57 +1,13 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Polymer Viewer</title>
-  </head>
-  <body>
-    <h1>My GLB Viewer</h1>
-    <script type="module">
-    import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
-    import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
-    
-    const scene = new THREE.Scene();
-    
-    const camera = new THREE.PerspectiveCamera(
-      75,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    
-    const renderer = new THREE.WebGLRenderer();
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
-    
-    // ✅ LIGHTING (important or model is black)
-    const light = new THREE.DirectionalLight(0xffffff, 1);
-    light.position.set(5, 5, 5);
-    scene.add(light);
-    
-    // ✅ LOADER
-    const loader = new GLTFLoader();
-    
-    // 🔥 AUTO-LOAD YOUR TEST FILE
-    loader.load(
-      "models/test.glb",
-      (gltf) => {
-        console.log("Loaded!");
-        scene.add(gltf.scene);
-      },
-      undefined,
-      (error) => {
-        console.error("Error loading model:", error);
-      }
-    );
-    
-    camera.position.z = 5;
-    
-    function animate() {
-      requestAnimationFrame(animate);
-      renderer.render(scene, camera);
-    }
-    animate();
-    </script>
-  </body>
+<head>
+  <title>Polymer Viewer</title>
+</head>
+<body>
+  <h1>Polymer Viewer</h1>
+
+  <script type="module" src="load.js"></script>
+</body>
 </html>
 
 
