@@ -68,7 +68,7 @@ scene.add(light2);
 const loader = new GLTFLoader();
 
 loader.load(
-  modelUrl,
+  'models/884cylinders.glb',
   (gltf) => {
     const model = gltf.scene;
     scene.add(model);
