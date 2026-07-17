@@ -145,7 +145,10 @@ loader.load(
     // FRAME CAMERA
     //////////////////////////////////
     camera.position.set(3, 3, 3);
-    controls.target.set(0, 0, 0);
+    // better target
+    const newBox = new THREE.Box3().setFromObject(model);
+    const trueCenter = newBox.getCenter(new THREE.Vector3());
+    controls.target.copy(trueCenter);
     controls.update();
 
     //////////////////////////////////
