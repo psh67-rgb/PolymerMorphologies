@@ -62,26 +62,52 @@ scene.add(lightProbe);
 // Loader
 const loader = new GLTFLoader();
 
+
 loader.load(
   "models/884cylinders.glb",
   (gltf) => {
     const model = gltf.scene;
+
+    // 🔥 APPLY MATERIAL FIX HERE
+    const CHANNEL_COLORS = [
+      0xff4d4d,
+      0x4dff88,
+      0x4da6ff
+    ];
+
+    let meshIndex = 0;
+
+    model.traverse((child) => {
+      if (child.isMesh) {
+
+        const color = CHANNEL_COLORS[meshIndex % CHANNEL_COLORS.length];
+
+        child.material = new THREE.MeshStandardMaterial({
+          color: color,
+
+          transparent: true,
+          opacity: 0.75,
+
+          roughness: 0.35,
+          metalness: 0.05,
+
+          side: THREE.DoubleSide,
+          depthWrite: true,
+          depthTest: true,
+
+          // optional but nice
+          emissive: new THREE.Color(color),
+          emissiveIntensity: 0.05,
+        });
+
+        meshIndex++;
+      }
+    });
+
+    // 🔹 Add model AFTER modifying materials
     scene.add(model);
 
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3()).length();
-
-    model.position.sub(center);
-    camera.position.set(size, size, size);
-    camera.lookAt(0, 0, 0);
-
-    loadingDiv.style.display = "none";
-  },
-  undefined,
-  (error) => {
-    loadingDiv.innerText = "Failed to load model";
-    console.error(error);
+    // (keep your centering / camera code here if you have it)
   }
 );
 
