@@ -136,7 +136,7 @@ loader.load(
     model.position.sub(center);
 
     const maxDim = Math.max(size.x, size.y, size.z);
-    const scale = 4.0/maxDim;
+    const scale = 8.0/maxDim;
     model.scale.setScalar(scale);
 
     scene.add(model);
