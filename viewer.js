@@ -94,6 +94,8 @@ scene.add(fillLight);
 const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
 scene.add(hemi);
 
+const lightProbe = new THREE.HemisphereLight(0xffffff, 0x222222, 1);
+scene.add(lightProbe);
 
 // Animate
 function animate() {
