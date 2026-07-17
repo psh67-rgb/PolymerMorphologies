@@ -37,10 +37,28 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// Lights
-scene.add(new THREE.DirectionalLight(0xffffff, 1).position.set(5,5,5));
-scene.add(new THREE.AmbientLight(0xffffff, 0.4));
+// Lighting
 
+// Ambient light (base visibility)
+const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambient);
+
+// Strong directional light
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+dirLight.position.set(5, 5, 5);
+scene.add(dirLight);
+
+// Fill light (opposite side to remove harsh shadows)
+const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
+fillLight.position.set(-5, -3, -5);
+scene.add(fillLight);
+
+// Optional: hemisphere light for softer global illumination
+const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
+scene.add(hemi);
+
+const lightProbe = new THREE.HemisphereLight(0xffffff, 0x222222, 1);
+scene.add(lightProbe);
 // Loader
 const loader = new GLTFLoader();
 
@@ -73,29 +91,6 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-
-// 🔹 Lighting (FIXED)
-
-// Ambient light (base visibility)
-const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambient);
-
-// Strong directional light
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
-dirLight.position.set(5, 5, 5);
-scene.add(dirLight);
-
-// Fill light (opposite side to remove harsh shadows)
-const fillLight = new THREE.DirectionalLight(0xffffff, 1.0);
-fillLight.position.set(-5, -3, -5);
-scene.add(fillLight);
-
-// Optional: hemisphere light for softer global illumination
-const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 0.8);
-scene.add(hemi);
-
-const lightProbe = new THREE.HemisphereLight(0xffffff, 0x222222, 1);
-scene.add(lightProbe);
 
 // Animate
 function animate() {
