@@ -48,6 +48,8 @@ document.body.appendChild(renderer.domElement);
 //////////////////////////////
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+controls.target.set(0, 0, 0);
+controls.update();
 
 //////////////////////////////
 // LIGHTING (ROBUST SETUP)
