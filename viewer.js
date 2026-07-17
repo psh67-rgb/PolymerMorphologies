@@ -1,42 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>3D Polymer Viewer</title>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    #loading {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      color: white;
-      font-family: sans-serif;
-      background: rgba(0,0,0,0.5);
-      padding: 6px 10px;
-      border-radius: 4px;
-    }
-  </style>
-</head>
-<body>
-
-<div id="loading">Loading...</div>
-
-<script type="module">
 import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
 console.log("viewer.js is running");
 
-// 🔹 Get model ID from URL
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id") || "000001";  // default fallback
+// Loading text (create via JS instead of HTML)
+const loadingDiv = document.createElement("div");
+loadingDiv.innerText = "Loading...";
+loadingDiv.style.position = "absolute";
+loadingDiv.style.top = "10px";
+loadingDiv.style.left = "10px";
+loadingDiv.style.color = "white";
+loadingDiv.style.background = "rgba(0,0,0,0.5)";
+loadingDiv.style.padding = "6px 10px";
+document.body.appendChild(loadingDiv);
 
-// 🔹 CHANGE THIS to your storage bucket
-const MODEL_BASE_URL = "https://github.com/psh67-rgb/PolymerMorphologies.git";
-const modelUrl = `${MODEL_BASE_URL}${id}.glb`;
-
-// 🔹 Scene setup
+// Scene
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x111111);
 
@@ -58,24 +37,19 @@ document.body.appendChild(renderer.domElement);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// 🔹 Lighting
-const light1 = new THREE.DirectionalLight(0xffffff, 1);
-light1.position.set(5, 5, 5);
-scene.add(light1);
+// Lights
+scene.add(new THREE.DirectionalLight(0xffffff, 1).position.set(5,5,5));
+scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
-const light2 = new THREE.AmbientLight(0xffffff, 0.4);
-scene.add(light2);
-
-// 🔹 Load model
+// Loader
 const loader = new GLTFLoader();
 
 loader.load(
-  'models/884cylinders.glb',
+  "models/884cylinders.glb",
   (gltf) => {
     const model = gltf.scene;
     scene.add(model);
 
-    // Center + scale automatically
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3()).length();
@@ -84,23 +58,23 @@ loader.load(
     camera.position.set(size, size, size);
     camera.lookAt(0, 0, 0);
 
-    document.getElementById("loading").style.display = "none";
+    loadingDiv.style.display = "none";
   },
   undefined,
   (error) => {
-    document.getElementById("loading").innerText = "Failed to load model";
+    loadingDiv.innerText = "Failed to load model";
     console.error(error);
   }
 );
 
-// 🔹 Resize handling
+// Resize
 window.addEventListener("resize", () => {
   camera.aspect = window.innerWidth / window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-// 🔹 Animation loop
+// Animate
 function animate() {
   requestAnimationFrame(animate);
   controls.update();
