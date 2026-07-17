@@ -83,7 +83,7 @@ scene.add(debugMesh);
 const loader = new GLTFLoader();
 
 loader.load(
-  "models/884cylinders.glb",
+  "models/doublegyroid.glb",
 
   //////////////////////////////////
   // SUCCESS
