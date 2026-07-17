@@ -64,7 +64,7 @@ const loader = new GLTFLoader();
 
 
 loader.load(
-  "models/884cylinders.glb",
+  "/models/884cylinders.glb",
   (gltf) => {
     const model = gltf.scene;
 
