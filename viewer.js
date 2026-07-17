@@ -26,6 +26,8 @@ import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
 import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
 import { GLTFLoader } from "https://unpkg.com/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
 
+console.log("viewer.js is running");
+
 // 🔹 Get model ID from URL
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id") || "000001";  // default fallback
