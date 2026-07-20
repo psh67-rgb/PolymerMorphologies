@@ -129,7 +129,7 @@ loader.load(
         child.geometry.computeVertexNormals();
 
         const channel = meshIndex % 3;
-        channelMeshes[channel]..push(child);
+        channelMeshes[channel].push(child);
         meshIndex++;
       }
     });
@@ -147,16 +147,30 @@ loader.load(
       if (e.key === "3") toggleChannel(2);
     });
 
+    ///////// Button Block ///////////
+    const ui = document.createElement("div");
+    ui.style.position = "absolute";
+    ui.style.top = "10px";
+    ui.style.right = "10px";
+    ui.style.zIndex = "1000";
+    ui.style.display = "flex";
+    ui.style.flexDirection = "column";
+    ui.style.gap = "8px";
+    
+    document.body.appendChild(ui);
+    
     ["Red", "Cyan", "Yellow"].forEach((name, i) => {
       const btn = document.createElement("button");
       btn.innerText = name;
-      btn.style.position = "absolute";
-      btn.style.top = `${10 + i * 35}px`;
-      btn.style.right = "10px";
+    
+      btn.style.padding = "6px 10px";
+      btn.style.background = "white";
+      btn.style.border = "none";
+      btn.style.cursor = "pointer";
     
       btn.onclick = () => toggleChannel(i);
     
-      document.body.appendChild(btn);
+      ui.appendChild(btn);
     });
     
     //////////////////////////////////
