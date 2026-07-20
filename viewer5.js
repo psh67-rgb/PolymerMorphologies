@@ -237,7 +237,7 @@ loader.load(
     scene.add(pivot);
     
     // compute scale
-    const scale = 4.0 / Math.max(size.x, size.y, size.z);
+    const scale = 2.0 / Math.max(size.x, size.y, size.z);
     
     // 🔥 FIX: scale the center offset too
     model.position.sub(center.multiplyScalar(scale));
