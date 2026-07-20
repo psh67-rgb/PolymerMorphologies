@@ -237,7 +237,7 @@ loader.load(
     scene.add(pivot);
     
     // move model so its center sits at pivot origin
-    model.position.sub(center);
+    model.position.sub(center.multiplyScalar(scale));
     
     // scale AFTER centering
     const scale = 8.0 / Math.max(size.x, size.y, size.z);
