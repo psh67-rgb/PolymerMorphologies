@@ -80,6 +80,8 @@ scene.add(debugMesh);
 //////////////////////////////
 // GLTF LOADER
 //////////////////////////////
+const channelMeshes = [[], [], []];
+
 const loader = new GLTFLoader();
 
 loader.load(
@@ -92,9 +94,9 @@ loader.load(
     const model = gltf.scene;
 
     const CHANNEL_COLORS = [
-      0xff4d4d, // red
-      0x4dff88, // green
-      0x4da6ff  // blue
+      0xff0000, // red
+      0x00ffff, // cyan
+      0xffff00  // yellow
     ];
 
     let meshIndex = 0;
@@ -126,10 +128,37 @@ loader.load(
         // 🔥 CRITICAL for correct lighting
         child.geometry.computeVertexNormals();
 
+        const channel = meshIndex % 3;
+        channelMeshes[channel]..push(child);
         meshIndex++;
       }
     });
 
+
+    function toggleChannel(index) {
+      channelMeshes[index].forEach(mesh => {
+        mesh.visible = !mesh.visible;
+      });
+    }
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "1") toggleChannel(0);
+      if (e.key === "2") toggleChannel(1);
+      if (e.key === "3") toggleChannel(2);
+    });
+
+    ["Red", "Cyan", "Yellow"].forEach((name, i) => {
+      const btn = document.createElement("button");
+      btn.innerText = name;
+      btn.style.position = "absolute";
+      btn.style.top = `${10 + i * 35}px`;
+      btn.style.right = "10px";
+    
+      btn.onclick = () => toggleChannel(i);
+    
+      document.body.appendChild(btn);
+    });
+    
     //////////////////////////////////
     // CENTER + SCALE MODEL
     //////////////////////////////////
