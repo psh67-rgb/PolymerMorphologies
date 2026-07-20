@@ -232,24 +232,25 @@ loader.load(
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
     
-    // 🔥 create pivot at origin
+    // create pivot
     const pivot = new THREE.Group();
     scene.add(pivot);
     
-    // move model so its center sits at pivot origin
+    // compute scale
+    const scale = 8.0 / Math.max(size.x, size.y, size.z);
+    
+    // 🔥 FIX: scale the center offset too
     model.position.sub(center.multiplyScalar(scale));
     
-    // scale AFTER centering
-    const scale = 8.0 / Math.max(size.x, size.y, size.z);
+    // apply scale
     model.scale.setScalar(scale);
     
-    // add model to pivot (not scene directly)
+    // attach to pivot
     pivot.add(model);
     
-    // 🔥 orbit around pivot center
+    // orbit center
     controls.target.set(0, 0, 0);
     controls.update();
-
     loadingDiv.remove();
 
     console.log("Model loaded with UI state control");
