@@ -88,7 +88,7 @@ const channelMeshes = {};
 const loader = new GLTFLoader();
 
 loader.load(
-  "models/doublegyroid.glb",
+  "models/diamond_test.glb",
 
   //////////////////////////////////
   // SUCCESS
