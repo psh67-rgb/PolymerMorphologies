@@ -231,14 +231,22 @@ loader.load(
     const box = new THREE.Box3().setFromObject(model);
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
-
+    
+    // 🔥 create pivot at origin
+    const pivot = new THREE.Group();
+    scene.add(pivot);
+    
+    // move model so its center sits at pivot origin
     model.position.sub(center);
-
+    
+    // scale AFTER centering
     const scale = 8.0 / Math.max(size.x, size.y, size.z);
     model.scale.setScalar(scale);
-
-    scene.add(model);
-
+    
+    // add model to pivot (not scene directly)
+    pivot.add(model);
+    
+    // 🔥 orbit around pivot center
     controls.target.set(0, 0, 0);
     controls.update();
 
