@@ -91,7 +91,7 @@ function styleButton(button, active) {
 const loader = new GLTFLoader();
 
 loader.load(
-  "models/doublegyroid.glb",
+  "models/diamond_test.glb",
 
   (gltf) => {
     const model = gltf.scene;
