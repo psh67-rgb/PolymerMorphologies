@@ -91,7 +91,7 @@ function styleButton(button, active) {
 const loader = new GLTFLoader();
 
 loader.load(
-  "models/diamond_test.glb",
+  "models/gyroid_chiAB0.4_chiBC1.2_chiAC0.55_fA0.25_fB0.3.glb",
 
   (gltf) => {
     const model = gltf.scene;
