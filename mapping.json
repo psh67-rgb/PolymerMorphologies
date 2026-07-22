@@ -1,0 +1,14 @@
+{
+  "A": "cylinders",
+  "B": "diamond",
+  "C": "double_gyroid",
+  "D": "gyroid",
+  "E": "lamella",
+  "F": "lamella_110",
+  "G": "lamella_111",
+  "H": "O70",
+  "I": "random",
+  "J": "random1",
+  "K": "random2",
+  "L": "spheres"
+}
