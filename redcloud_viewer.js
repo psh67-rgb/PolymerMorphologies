@@ -96,18 +96,6 @@ loader.load(
   (gltf) => {
     const model = gltf.scene;
 
-    // ... all your existing code ...
-
-  },
-
-  undefined,
-
-  (error) => {
-    console.error("Error loading GLB:", error);
-    loadingDiv.innerText = "Error loading model";
-  }
-);
-
     const CHANNEL_COLORS = [0xff0000, 0x00ffff, 0xffff00];
 
     //////////////////////////////////
@@ -166,6 +154,118 @@ loader.load(
         styleButton(btn, true);
       });
     }
+
+    //////////////////////////////////
+    // CHANNEL TOGGLE
+    //////////////////////////////////
+    function toggleChannel(channel) {
+      if (!currentIso) return;
+      if (!channelMeshes[channel]) return;
+
+      const meshes = channelMeshes[channel][currentIso];
+      if (!meshes) return;
+
+      const newVisible = !meshes[0].visible;
+
+      meshes.forEach(mesh => {
+        mesh.visible = newVisible;
+      });
+
+      styleButton(channelButtons[channel], newVisible);
+    }
+
+    //////////////////////////////////
+    // UI
+    //////////////////////////////////
+    const ui = document.createElement("div");
+    ui.style.position = "absolute";
+    ui.style.top = "10px";
+    ui.style.right = "10px";
+    ui.style.display = "flex";
+    ui.style.flexDirection = "column";
+    ui.style.gap = "6px";
+    document.body.appendChild(ui);
+
+    // Collect iso values
+    const isoSet = new Set();
+    Object.values(channelMeshes).forEach(channel => {
+      Object.keys(channel).forEach(i => isoSet.add(i));
+    });
+
+    const isoList = [...isoSet].sort(
+      (a, b) => parseFloat(a) - parseFloat(b)
+    );
+
+    // ISO buttons
+    isoList.forEach((iso) => {
+      const btn = document.createElement("button");
+      btn.innerText = `Iso ${iso}`;
+      btn.onclick = () => setIso(iso);
+
+      styleButton(btn, false);
+
+      isoButtons[iso] = btn;
+      ui.appendChild(btn);
+    });
+
+    // Channel buttons
+    Object.keys(channelMeshes).forEach((channel) => {
+      const btn = document.createElement("button");
+      btn.innerText = `Channel ${channel}`;
+      btn.onclick = () => toggleChannel(channel);
+
+      styleButton(btn, true);
+
+      channelButtons[channel] = btn;
+      ui.appendChild(btn);
+    });
+
+    //////////////////////////////////
+    // DEFAULT ISO
+    //////////////////////////////////
+    if (isoList.length > 0) {
+      setIso(isoList[0]);
+    }
+
+    //////////////////////////////////
+    // CENTER + SCALE
+    //////////////////////////////////
+    const box = new THREE.Box3().setFromObject(model);
+    const center = box.getCenter(new THREE.Vector3());
+    const size = box.getSize(new THREE.Vector3());
+
+    // create pivot
+    const pivot = new THREE.Group();
+    scene.add(pivot);
+
+    // compute scale
+    const scale = 2.0 / Math.max(size.x, size.y, size.z);
+
+    // scale the center offset too
+    model.position.sub(center.multiplyScalar(scale));
+
+    // apply scale
+    model.scale.setScalar(scale);
+
+    // attach to pivot
+    pivot.add(model);
+
+    // orbit center
+    controls.target.set(0, 0, 0);
+    controls.update();
+
+    loadingDiv.remove();
+
+    console.log("Model loaded with UI state control");
+  },
+
+  undefined,
+
+  (error) => {
+    console.error("Error loading GLB:", error);
+    loadingDiv.innerText = "Error loading model";
+  }
+);
 
     //////////////////////////////////
     // CHANNEL TOGGLE
