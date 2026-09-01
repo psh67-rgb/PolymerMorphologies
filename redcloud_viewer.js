@@ -93,6 +93,7 @@ const loader = new GLTFLoader();
 loader.load(
   "https://redcloud2.cac.cornell.edu:8443/glb_files/double_gyroid_5.glb",
 
+  // SUCCESS
   (gltf) => {
     const model = gltf.scene;
 
@@ -107,11 +108,16 @@ loader.load(
       const match = child.name.match(/iso_(.+)_channel_(\d+)/);
       if (!match) return;
 
-      let isoStr = match[1].replace(/p/g, ".");
+      const isoStr = match[1].replace(/p/g, ".");
       const channel = parseInt(match[2]);
 
-      if (!channelMeshes[channel]) channelMeshes[channel] = {};
-      if (!channelMeshes[channel][isoStr]) channelMeshes[channel][isoStr] = [];
+      if (!channelMeshes[channel]) {
+        channelMeshes[channel] = {};
+      }
+
+      if (!channelMeshes[channel][isoStr]) {
+        channelMeshes[channel][isoStr] = [];
+      }
 
       const color = CHANNEL_COLORS[channel % CHANNEL_COLORS.length];
 
@@ -136,20 +142,20 @@ loader.load(
     function setIso(isoStr) {
       currentIso = isoStr;
 
-      Object.values(channelMeshes).forEach(channel => {
+      Object.values(channelMeshes).forEach((channel) => {
         Object.entries(channel).forEach(([iso, meshes]) => {
-          meshes.forEach(mesh => {
-            mesh.visible = (iso === isoStr);
+          meshes.forEach((mesh) => {
+            mesh.visible = iso === isoStr;
           });
         });
       });
 
-      // update iso buttons
+      // Update iso buttons
       Object.entries(isoButtons).forEach(([iso, btn]) => {
         styleButton(btn, iso === isoStr);
       });
 
-      // reset channel buttons (all visible)
+      // Reset channel buttons (all visible)
       Object.entries(channelButtons).forEach(([channel, btn]) => {
         styleButton(btn, true);
       });
@@ -167,7 +173,7 @@ loader.load(
 
       const newVisible = !meshes[0].visible;
 
-      meshes.forEach(mesh => {
+      meshes.forEach((mesh) => {
         mesh.visible = newVisible;
       });
 
@@ -188,8 +194,11 @@ loader.load(
 
     // Collect iso values
     const isoSet = new Set();
-    Object.values(channelMeshes).forEach(channel => {
-      Object.keys(channel).forEach(i => isoSet.add(i));
+
+    Object.values(channelMeshes).forEach((channel) => {
+      Object.keys(channel).forEach((iso) => {
+        isoSet.add(iso);
+      });
     });
 
     const isoList = [...isoSet].sort(
@@ -199,6 +208,7 @@ loader.load(
     // ISO buttons
     isoList.forEach((iso) => {
       const btn = document.createElement("button");
+
       btn.innerText = `Iso ${iso}`;
       btn.onclick = () => setIso(iso);
 
@@ -211,6 +221,7 @@ loader.load(
     // Channel buttons
     Object.keys(channelMeshes).forEach((channel) => {
       const btn = document.createElement("button");
+
       btn.innerText = `Channel ${channel}`;
       btn.onclick = () => toggleChannel(channel);
 
@@ -234,23 +245,23 @@ loader.load(
     const center = box.getCenter(new THREE.Vector3());
     const size = box.getSize(new THREE.Vector3());
 
-    // create pivot
+    // Create pivot
     const pivot = new THREE.Group();
     scene.add(pivot);
 
-    // compute scale
+    // Compute scale
     const scale = 2.0 / Math.max(size.x, size.y, size.z);
 
-    // scale the center offset too
+    // Scale the center offset too
     model.position.sub(center.multiplyScalar(scale));
 
-    // apply scale
+    // Apply scale
     model.scale.setScalar(scale);
 
-    // attach to pivot
+    // Attach to pivot
     pivot.add(model);
 
-    // orbit center
+    // Orbit center
     controls.target.set(0, 0, 0);
     controls.update();
 
@@ -259,113 +270,13 @@ loader.load(
     console.log("Model loaded with UI state control");
   },
 
+  // PROGRESS
   undefined,
 
+  // ERROR
   (error) => {
     console.error("Error loading GLB:", error);
     loadingDiv.innerText = "Error loading model";
-  }
-);
-
-    //////////////////////////////////
-    // CHANNEL TOGGLE
-    //////////////////////////////////
-    function toggleChannel(channel) {
-      if (!currentIso) return;
-      if (!channelMeshes[channel]) return;
-
-      const meshes = channelMeshes[channel][currentIso];
-      if (!meshes) return;
-
-      const newVisible = !meshes[0].visible;
-
-      meshes.forEach(mesh => {
-        mesh.visible = newVisible;
-      });
-
-      styleButton(channelButtons[channel], newVisible);
-    }
-
-    //////////////////////////////////
-    // UI
-    //////////////////////////////////
-    const ui = document.createElement("div");
-    ui.style.position = "absolute";
-    ui.style.top = "10px";
-    ui.style.right = "10px";
-    ui.style.display = "flex";
-    ui.style.flexDirection = "column";
-    ui.style.gap = "6px";
-    document.body.appendChild(ui);
-
-    // Collect iso values
-    const isoSet = new Set();
-    Object.values(channelMeshes).forEach(channel => {
-      Object.keys(channel).forEach(i => isoSet.add(i));
-    });
-
-    const isoList = [...isoSet].sort((a, b) => parseFloat(a) - parseFloat(b));
-
-    // ISO buttons
-    isoList.forEach((iso) => {
-      const btn = document.createElement("button");
-      btn.innerText = `Iso ${iso}`;
-      btn.onclick = () => setIso(iso);
-
-      styleButton(btn, false);
-
-      isoButtons[iso] = btn;
-      ui.appendChild(btn);
-    });
-
-    // Channel buttons
-    Object.keys(channelMeshes).forEach((channel) => {
-      const btn = document.createElement("button");
-      btn.innerText = `Channel ${channel}`;
-      btn.onclick = () => toggleChannel(channel);
-
-      styleButton(btn, true);
-
-      channelButtons[channel] = btn;
-      ui.appendChild(btn);
-    });
-
-    //////////////////////////////////
-    // DEFAULT ISO
-    //////////////////////////////////
-    if (isoList.length > 0) {
-      setIso(isoList[0]);
-    }
-
-    //////////////////////////////////
-    // CENTER + SCALE
-    //////////////////////////////////
-    const box = new THREE.Box3().setFromObject(model);
-    const center = box.getCenter(new THREE.Vector3());
-    const size = box.getSize(new THREE.Vector3());
-    
-    // create pivot
-    const pivot = new THREE.Group();
-    scene.add(pivot);
-    
-    // compute scale
-    const scale = 2.0 / Math.max(size.x, size.y, size.z);
-    
-    // 🔥 FIX: scale the center offset too
-    model.position.sub(center.multiplyScalar(scale));
-    
-    // apply scale
-    model.scale.setScalar(scale);
-    
-    // attach to pivot
-    pivot.add(model);
-    
-    // orbit center
-    controls.target.set(0, 0, 0);
-    controls.update();
-    loadingDiv.remove();
-
-    console.log("Model loaded with UI state control");
   }
 );
 
