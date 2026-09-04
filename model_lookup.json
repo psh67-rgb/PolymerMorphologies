@@ -1,5 +1,14 @@
 {
-  "001": "spheres_9.glb",
-  "002": "cylinders_10.glb",
-  "003": "gyroid_11.glb"
+    "124712945": "cylinders_0.glb",
+    "124712947": "diamond_0.glb",
+    "124712949": "double_gyroid_0.glb",
+    "124712951": "gyroid_0.glb",
+    "124712952": "lamella_110_0.glb",
+    "124712954": "lamella_111_0.glb",
+    "124712956": "lamella_0.glb",
+    "124712957": "O70_0.glb",
+    "124712960": "random_0.glb",
+    "124712961": "random1_0.glb",
+    "124712962": "random2_0.glb",
+    "124712965": "spheres_0.glb"
 }
