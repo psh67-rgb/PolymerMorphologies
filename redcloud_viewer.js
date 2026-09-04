@@ -91,7 +91,7 @@ function styleButton(button, active) {
 const loader = new GLTFLoader();
 
 loader.load(
-  "http://redcloud2.cac.cornell.edu:8443/batch1_glbs/spheres_9.glb",
+  "https://redcloud2.cac.cornell.edu:8443/batch1_glbs/spheres_9.glb",
 
   // SUCCESS
   (gltf) => {
