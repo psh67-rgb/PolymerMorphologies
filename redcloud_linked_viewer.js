@@ -420,14 +420,15 @@ if (!subjectId) {
           //////////////////////////////////
           // DEFAULT ISO
           //////////////////////////////////
-
-          if (isoList.length > 0) {
-
-            setIso(
-              isoList[0]
-            );
-
+          if (isoList.includes("0.5")) {
+            setIso("0.5");
+          } else if (isoList.length > 0) {
+            setIso(isoList[0]);
           }
+
+
+          
+         
 
           //////////////////////////////////
           // CENTER + SCALE
