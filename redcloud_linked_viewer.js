@@ -420,10 +420,11 @@ if (!subjectId) {
           //////////////////////////////////
           // DEFAULT ISO
           //////////////////////////////////
-          if (isoList.includes("0.5")) {
-            setIso("0.5");
-          } else if (isoList.length > 0) {
-            setIso(isoList[0]);
+          if (isoList.length > 1) {
+            setIso(isoList[1]);
+          }
+          else if (isoList.length > 0) {
+            setIso(isoList[0])
           }
 
 
